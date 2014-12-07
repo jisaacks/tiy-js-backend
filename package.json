@@ -1,0 +1,17 @@
+{
+  "name": "tiy-js-backend",
+  "version": "0.0.0",
+  "description": "",
+  "keywords": [],
+  "homepage": "",
+  "author": {
+    "name": "JD Isaacks",
+    "email": "jd@jisaacks.com"
+  },
+  "main": "./index.js",
+  "dependencies": {
+    "express": "~4.10.4",
+    "mincer": "~1.2.1",
+    "jade": "~1.8.1"
+  }
+}
