@@ -12,6 +12,8 @@
   "dependencies": {
     "express": "~4.10.4",
     "mincer": "~1.2.1",
-    "jade": "~1.8.1"
+    "jade": "~1.8.1",
+    "nedb": "~1.0.0",
+    "body-parser": "~1.10.0"
   }
 }
