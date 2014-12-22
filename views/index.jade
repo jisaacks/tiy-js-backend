@@ -1,4 +1,6 @@
 extends layout
 
 block content
-  div hello world
+  .records
+  script(type="text/javascript").
+    window.app = new tiy.App({el: $(".records")});

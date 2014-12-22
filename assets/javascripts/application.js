@@ -1,3 +1,10 @@
+//= require ./vendor/jquery
+//= require ./vendor/underscore
+//= require ./vendor/backbone
 //= require_tree ./vendor
 //= require_tree ./templates
+//= require ./ns
+//= require ./data
+//= require ./views
+//= require ./app
 //= require_tree .
