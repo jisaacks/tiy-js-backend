@@ -39,8 +39,8 @@
     },
 
     buildList: function() {
-      return this.props.lists.map(function(list) {
-        return <ns.TodoList model={list} />
+      return this.props.lists.map(function(list, i) {
+        return <ns.TodoList model={list} key={"list_"+i} />
       });
     },
 
@@ -60,6 +60,80 @@
           </form>
         </div>
       );
+    }
+  });
+
+  ns.TodoItem = React.createClass({
+    render: function() {
+      return (
+        <tr>
+          <td width="60%">{this.props.item.name}</td>
+          <td>
+            <label>
+              <input type="checkbox" />
+              Finished
+            </label>
+          </td>
+          <td><button>Delete</button></td>
+        </tr>
+      );
+    }
+  });
+
+  ns.TodoItems = React.createClass({
+    getInitialState: function() {
+      return {
+        newItemName: ""
+      }
+    },
+
+    add: function(e) {
+      e.preventDefault();
+      this.props.addItem({name: this.state.newItemName});
+      this.setState({newItemName: ""});
+    },
+
+    newNameChange: function(e) {
+      this.setState({
+        newItemName: e.target.value
+      });
+    },
+
+    buildList: function() {
+      if (this.props.items.length) {
+        return this.props.items.map(function(item, i) {
+          return <ns.TodoItem item={item} key={"item_"+i} />
+        });
+      } else {
+        return <tr><td colSpan="3">Relax!</td></tr>
+      }
+    },
+
+    render: function() {
+      if (this.props.items) {
+        return (
+          <div>
+            <div className="util">
+              <button>Delete {this.props.name}</button>
+            </div>
+            <h1>
+              {this.props.name}
+              <button className="show-add">+</button>
+            </h1>
+            <form className="add" onSubmit={this.add}>
+              <input type="text" name="name"
+                value={this.state.newItemName}
+                onChange={this.newNameChange} />
+              <input type="submit" value="Add" />
+            </form>
+            <table>
+              <tbody>{this.buildList()}</tbody>
+            </table>
+          </div>
+        );
+      } else {
+        return <div>Nothing to show here!</div>
+      }
     }
   });
 

@@ -4,9 +4,18 @@
 
     var lists = new ns.data.TodoLists();
 
+    var selectedList;
+
     var getState = function() {
+      if (!selectedList && lists.length) {
+        selectedList = lists.first();
+      }
+      var items = selectedList && selectedList.items;
+
       return {
-        lists: lists.toJSON()
+        lists: lists.toJSON(),
+        items: items && items.toJSON(),
+        name: selectedList && selectedList.get("name")
       }
     };
 
@@ -19,10 +28,16 @@
         lists.add(obj);
       },
 
+      addItem: function(obj) {
+        // First set the list id
+        obj.list_id = selectedList.id;
+        selectedList.items.add(obj);
+      },
+
       componentDidMount: function() {
         // When a _new_ model is added
         // to collection, save it.
-        lists.on("add", function(model) {
+        lists.on("add items:add", function(model) {
           if (model.isNew()){
             model.save();
           }
@@ -31,7 +46,7 @@
 
         // When our collection syncs with
         // the server, update our state.
-        lists.on("sync", function() {
+        lists.on("sync items:sync", function() {
           this.setState(getState());
         }, this);
       },
@@ -45,7 +60,14 @@
           <div>
             <ns.views.Header />
             <div>
-              <ns.views.TodoLists lists={this.state.lists} addList={this.addList} />
+              <ns.views.TodoLists
+                lists={this.state.lists}
+                addList={this.addList} />
+
+              <ns.views.TodoItems
+                items={this.state.items}
+                addItem={this.addItem}
+                name={this.state.name} />
             </div>
             <ns.views.Footer />
           </div>

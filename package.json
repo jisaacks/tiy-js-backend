@@ -15,7 +15,7 @@
     "jade": "~1.8.1",
     "nedb": "~1.0.0",
     "body-parser": "~1.10.0",
-    "json_api": "0.0.1",
+    "json_api": "0.0.3",
     "handlebars": "~2.0.0"
   }
 }
