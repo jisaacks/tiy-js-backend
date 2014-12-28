@@ -34,6 +34,11 @@
         selectedList.items.add(obj);
       },
 
+      selectList: function(id) {
+        selectedList = lists.findWhere({_id: id});
+        this.setState(getState());
+      },
+
       componentDidMount: function() {
         // When a _new_ model is added
         // to collection, save it.
@@ -62,7 +67,8 @@
             <div>
               <ns.views.TodoLists
                 lists={this.state.lists}
-                addList={this.addList} />
+                addList={this.addList}
+                selectList={this.selectList} />
 
               <ns.views.TodoItems
                 items={this.state.items}

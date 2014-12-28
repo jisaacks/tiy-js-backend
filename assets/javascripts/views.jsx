@@ -15,7 +15,7 @@
 
   ns.TodoList = React.createClass({
     render: function() {
-      return <div>{this.props.model.name}</div>
+      return <div onClick={this.props.onClick}>{this.props.model.name}</div>
     }
   });
 
@@ -39,8 +39,18 @@
     },
 
     buildList: function() {
-      return this.props.lists.map(function(list, i) {
-        return <ns.TodoList model={list} key={"list_"+i} />
+      var selectList = this.props.selectList;
+      var select = function(id) {
+        return function() {
+          selectList(id);
+        }
+      };
+
+      return this.props.lists.map(function(list) {
+        return <ns.TodoList
+          model={list}
+          key={"list_"+list._id}
+          onClick={select(list._id)} />
       });
     },
 
@@ -101,8 +111,10 @@
 
     buildList: function() {
       if (this.props.items.length) {
-        return this.props.items.map(function(item, i) {
-          return <ns.TodoItem item={item} key={"item_"+i} />
+        return this.props.items.map(function(item) {
+          return <ns.TodoItem
+            item={item}
+            key={"item_"+item._id} />
         });
       } else {
         return <tr><td colSpan="3">Relax!</td></tr>
