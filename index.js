@@ -9,7 +9,14 @@ require('mincer-jsx')(mincer);
 
 var app = express();
 var env = new mincer.Environment();
-var db  = new Datastore("records.nedb");
+
+var createApi = function(url, path) {
+  var db = new Datastore({
+    filename: path,
+    autoload: true
+  });
+  app.use(url, json_api(db));
+}
 
 env.appendPath("assets/javascripts");
 env.appendPath("assets/stylesheets");
@@ -17,7 +24,9 @@ env.appendPath("assets/images");
 
 app.use("/assets", mincer.createServer(env));
 app.use(bodyParser.json());
-app.use("/records", json_api(db));
+
+createApi("/todo_lists", "data/lists.nedb");
+createApi("/todo_items", "data/items.nedb");
 
 app.set('view engine', 'jade');
 
@@ -25,7 +34,4 @@ app.get("/", function(req, res) {
   res.render("index");
 });
 
-db.loadDatabase(function (err) {
-  if (err) throw err;
-  app.listen(8025);
-});
+app.listen(8025);
