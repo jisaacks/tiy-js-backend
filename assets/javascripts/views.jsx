@@ -6,6 +6,8 @@
     }
   });
 
+  //--
+
   ns.Footer = React.createClass({
     msg: "An example todo app using Node.js, Backbone.js and React.js",
     render: function() {
@@ -13,11 +15,15 @@
     }
   });
 
+  //--
+
   ns.TodoList = React.createClass({
     render: function() {
       return <div onClick={this.props.onClick}>{this.props.model.name}</div>
     }
   });
+
+  //--
 
   ns.TodoLists = React.createClass({
     getInitialState: function() {
@@ -73,7 +79,16 @@
     }
   });
 
+  //--
+
   ns.TodoItem = React.createClass({
+    del: function() {
+      var confrimed = confirm("Delete " + this.props.item.name + "?");
+      if (confrimed) {
+        this.props.delItem(this.props.item._id);
+      }
+    },
+
     render: function() {
       return (
         <tr>
@@ -84,11 +99,13 @@
               Finished
             </label>
           </td>
-          <td><button>Delete</button></td>
+          <td><button onClick={this.del}>Delete</button></td>
         </tr>
       );
     }
   });
+
+  //--
 
   ns.TodoItems = React.createClass({
     getInitialState: function() {
@@ -110,11 +127,13 @@
     },
 
     buildList: function() {
+      var _this = this;
       if (this.props.items.length) {
         return this.props.items.map(function(item) {
           return <ns.TodoItem
             item={item}
-            key={"item_"+item._id} />
+            key={"item_"+item._id}
+            delItem={_this.props.delItem} />
         });
       } else {
         return <tr><td colSpan="3">Relax!</td></tr>

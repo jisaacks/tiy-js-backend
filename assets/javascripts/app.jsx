@@ -24,6 +24,10 @@
         return getState();
       },
 
+      redraw: function() {
+        this.setState( getState() );
+      },
+
       addList: function(obj) {
         lists.add(obj);
       },
@@ -34,9 +38,14 @@
         selectedList.items.add(obj);
       },
 
+      delItem: function(id) {
+        selectedList.items.findWhere({_id: id}).destroy();
+        this.redraw();
+      },
+
       selectList: function(id) {
         selectedList = lists.findWhere({_id: id});
-        this.setState(getState());
+        this.redraw();
       },
 
       componentDidMount: function() {
@@ -46,14 +55,12 @@
           if (model.isNew()){
             model.save();
           }
-          this.setState(getState());
+          this.redraw();
         }, this);
 
         // When our collection syncs with
         // the server, update our state.
-        lists.on("sync items:sync", function() {
-          this.setState(getState());
-        }, this);
+        lists.on("sync items:sync", this.redraw, this);
       },
 
       componentWillUnmount: function() {
@@ -73,6 +80,7 @@
               <ns.views.TodoItems
                 items={this.state.items}
                 addItem={this.addItem}
+                delItem={this.delItem}
                 name={this.state.name} />
             </div>
             <ns.views.Footer />
