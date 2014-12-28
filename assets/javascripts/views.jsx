@@ -18,8 +18,24 @@
   //--
 
   ns.TodoList = React.createClass({
+    del: function() {
+      var confirmed = confirm("Delete " + this.props.list.name + "?");
+      if (confirmed) {
+        this.props.delList(this.props.list._id);
+      }
+    },
+
     render: function() {
-      return <div onClick={this.props.onClick}>{this.props.model.name}</div>
+      return (
+        <tr>
+          <td>
+            <div onClick={this.props.onClick}>{this.props.list.name}</div>
+          </td>
+          <td>
+            <button onClick={this.del}>Delete</button>
+          </td>
+        </tr>
+      );
     }
   });
 
@@ -45,6 +61,7 @@
     },
 
     buildList: function() {
+      var _this = this;
       var selectList = this.props.selectList;
       var select = function(id) {
         return function() {
@@ -54,9 +71,10 @@
 
       return this.props.lists.map(function(list) {
         return <ns.TodoList
-          model={list}
+          list={list}
           key={"list_"+list._id}
-          onClick={select(list._id)} />
+          onClick={select(list._id)}
+          delList={_this.props.delList} />
       });
     },
 
@@ -67,7 +85,7 @@
             Things to Do
             <button className="show-add">+</button>
           </h3>
-          <ul>{this.buildList()}</ul>
+          <table><tbody>{this.buildList()}</tbody></table>
           <form className="add" onSubmit={this.add}>
             <input type="text" name="name"
               value={this.state.newListName}
@@ -83,8 +101,8 @@
 
   ns.TodoItem = React.createClass({
     del: function() {
-      var confrimed = confirm("Delete " + this.props.item.name + "?");
-      if (confrimed) {
+      var confirmed = confirm("Delete " + this.props.item.name + "?");
+      if (confirmed) {
         this.props.delItem(this.props.item._id);
       }
     },
@@ -144,9 +162,6 @@
       if (this.props.items) {
         return (
           <div>
-            <div className="util">
-              <button>Delete {this.props.name}</button>
-            </div>
             <h1>
               {this.props.name}
               <button className="show-add">+</button>

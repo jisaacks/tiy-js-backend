@@ -29,7 +29,25 @@
       },
 
       addList: function(obj) {
-        lists.add(obj);
+        selectedList = lists.add(obj);
+      },
+
+      delList: function(id) {
+        var wasSelected = false;
+        // Get the list to delete
+        var list = lists.findWhere({_id: id});
+        // Check if the list was selected
+        if (list.id === selectedList.id) {
+          wasSelected = true;
+        }
+        // delete the list
+        list.destroy();
+        // If the list was selected, reset selection.
+        if (wasSelected) {
+          selectedList = null;
+        }
+        // finally redraw
+        this.redraw();
       },
 
       addItem: function(obj) {
@@ -75,6 +93,7 @@
               <ns.views.TodoLists
                 lists={this.state.lists}
                 addList={this.addList}
+                delList={this.delList}
                 selectList={this.selectList} />
 
               <ns.views.TodoItems
