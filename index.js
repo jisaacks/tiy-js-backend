@@ -4,6 +4,9 @@ var Datastore   = require('nedb');
 var bodyParser  = require('body-parser');
 var json_api    = require('json_api');
 
+// Add JSX Engine to Mincer
+require('mincer-jsx')(mincer);
+
 var app = express();
 var env = new mincer.Environment();
 var db  = new Datastore("records.nedb");
