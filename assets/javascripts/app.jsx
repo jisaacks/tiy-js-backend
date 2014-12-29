@@ -89,18 +89,22 @@
         return (
           <div>
             <ns.views.Header />
-            <div>
-              <ns.views.TodoLists
-                lists={this.state.lists}
-                addList={this.addList}
-                delList={this.delList}
-                selectList={this.selectList} />
+            <div id="content">
+              <div className="lists">
+                <ns.views.TodoLists
+                  lists={this.state.lists}
+                  addList={this.addList}
+                  delList={this.delList}
+                  selectList={this.selectList} />
+              </div>
 
-              <ns.views.TodoItems
-                items={this.state.items}
-                addItem={this.addItem}
-                delItem={this.delItem}
-                name={this.state.name} />
+              <div className="items">
+                <ns.views.TodoItems
+                  items={this.state.items}
+                  addItem={this.addItem}
+                  delItem={this.delItem}
+                  name={this.state.name} />
+              </div>
             </div>
             <ns.views.Footer />
           </div>

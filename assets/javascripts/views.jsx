@@ -2,7 +2,7 @@
 
   ns.Header = React.createClass({
     render: function() {
-      return <h2>Do All The Things</h2>
+      return <div id="header"><h2>Do All The Things</h2></div>
     }
   });
 
@@ -11,7 +11,7 @@
   ns.Footer = React.createClass({
     msg: "An example todo app using Node.js, Backbone.js and React.js",
     render: function() {
-      return <div>{this.msg}</div>
+      return <div id="footer">{this.msg}</div>
     }
   });
 
@@ -32,7 +32,7 @@
             <div onClick={this.props.onClick}>{this.props.list.name}</div>
           </td>
           <td>
-            <button onClick={this.del}>Delete</button>
+            <button className="del-btn" onClick={this.del}><li className="fa fa-remove" /></button>
           </td>
         </tr>
       );
@@ -83,15 +83,14 @@
         <div>
           <h3>
             Things to Do
-            <button className="show-add">+</button>
           </h3>
-          <table><tbody>{this.buildList()}</tbody></table>
           <form className="add" onSubmit={this.add}>
             <input type="text" name="name"
               value={this.state.newListName}
               onChange={this.newNameChange} />
             <input type="submit" value="Add" />
           </form>
+          <table><tbody>{this.buildList()}</tbody></table>
         </div>
       );
     }
@@ -117,7 +116,9 @@
               Finished
             </label>
           </td>
-          <td><button onClick={this.del}>Delete</button></td>
+          <td>
+            <button className="del-btn" onClick={this.del}><li className="fa fa-remove" /></button>
+          </td>
         </tr>
       );
     }
@@ -154,7 +155,9 @@
             delItem={_this.props.delItem} />
         });
       } else {
-        return <tr><td colSpan="3">Relax!</td></tr>
+        return <tr><td colSpan="3">
+            <p className="empty"><i className="fa fa-arrow-up" /> Add something to do.</p>
+          </td></tr>
       }
     },
 
@@ -164,7 +167,6 @@
           <div>
             <h1>
               {this.props.name}
-              <button className="show-add">+</button>
             </h1>
             <form className="add" onSubmit={this.add}>
               <input type="text" name="name"
@@ -178,7 +180,7 @@
           </div>
         );
       } else {
-        return <div>Nothing to show here!</div>
+        return <div><p className="empty"><i className="fa fa-arrow-left" /> Create a list.</p></div>
       }
     }
   });
