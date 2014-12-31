@@ -25,6 +25,18 @@
       }
     },
 
+    getListId: function() {
+      return this.list_id;
+    },
+
+    hasListId: function() {
+      return !!this.getListId();
+    },
+
+    clearListId: function() {
+      this.list_id = undefined;
+    },
+
     url: function() {
       scope = $.param({scope: {list_id:this.list_id}});
       return "/todo_items?" + scope;

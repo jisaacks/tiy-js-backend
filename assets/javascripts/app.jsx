@@ -23,17 +23,43 @@
 
     // -- LISTEN TO LISTS COLLECTION -- //
 
-    lists.on("sync", function() {
+    lists.on("sync", function(synced) {
 
       // When the lists collection syncs with the server
       // It is no longer loading and we want to update the
       // list data with the newly synced data.
 
-      view.setProps({
+      var props = {
         listData: lists.toJSON(),
         listsLoading: false
-      });
+      };
 
+      // If it was in fact the lists collection that synced
+      // - and the list collection has at least one list
+      // - and the items collection does not have a list id
+      // Then we need to auto select the first list
+
+      if ( lists === synced && !!lists.length && !items.hasListId() ) {
+
+        // Grab the first list
+
+        var list = lists.first();
+
+        // Set the list ID on the items collection
+
+        items.setListId(list.id);
+
+        // Set the seleted list name
+
+        props.selListName = list.get("name")
+
+        // Even though the don't have any item data
+        // If we don't set the property it won't render
+
+        props.itemData = [];
+      }
+
+      view.setProps(props);
     });
 
     lists.on("destroy", function(destroyedList) {
@@ -41,15 +67,58 @@
       // When a list is destroyed we want to update
       // the list data (with the destroyed list removed)
 
-      props = {
+      var props = {
         listData: lists.toJSON()
       };
 
       // If the destroyed list was selected, we need to
-      // unset the item data.
+      // either auto select on of the remianing lists or
+      // unset the item data and clear the items list ID.
 
-      if ( destroyedList.id === items.list_id ) {
-        props.itemData = undefined;
+      if ( destroyedList.id === items.getListId() ) {
+
+        if ( !!lists.length ) {
+
+          // Grab the first list
+
+          var list = lists.first();
+
+          // Set the list ID on the items collection
+
+          items.setListId(list.id);
+
+          // Set the seleted list name
+
+          props.selListName = list.get("name")
+
+          // Even though the don't have any item data
+          // If we don't set the property it won't render
+
+          props.itemData = [];
+
+        } else {
+
+          // The user deleted the last list and there is
+          // no longer a list to auto select so we need to
+          // reset the items
+
+          // Set itemData to undefined so it goes back to
+          // It's initial state
+
+          props.itemData = undefined;
+
+          // Clear the selected list name we well. It shouldn't
+          // matter since the items list won't render anyways
+          // but we will still do it for good measure.
+
+          props.selListName = undefined;
+
+          // We need to clear the list ID on the items collection
+
+          items.clearListId();
+
+        }
+
       }
 
       view.setProps(props);
@@ -57,15 +126,26 @@
 
     lists.on("add", function(newList) {
 
-      // When a list is added we want to update
-      // the list data (with the new list)
-
-      view.setProps({listData: lists.toJSON()});
-
-      // If the list is not persisted, save it.
-
       if ( newList.isNew() ) {
-        newList.save();
+
+        // When adding a new list, we want to select it.
+
+        view.setProps({
+          listData: lists.toJSON(),
+          selListName: newList.get("name")
+        });
+
+        // If the list is not persisted, save it.
+
+        newList.save().then(function(){
+
+          // We need to set the selected list id
+          // to this list's ID. But we wont know
+          // the ID until after it is saved.
+
+          items.setListId(newList.id);
+        });
+
       }
 
     });
@@ -90,7 +170,7 @@
       // to update the item data with the newly synced
       // data.
 
-      props = {
+      var props = {
         itemData: items.toJSON()
       };
 
@@ -107,19 +187,25 @@
 
     items.on("add", function(newItem) {
 
-      // When an item is added we want to update
-      // the item data (with the new item)
+      // We only need to do anything if the item is new
+      // The only other time this event fires is when
+      // items are added after a sync and we are already
+      // handling that case in the `sync` handler.
 
-      view.setProps({ itemData: items.toJSON() });
+      if ( newItem.isNew() ){
 
-      // If the item isnot persisted yet we also
-      // want to save it. Additionally we will want
-      // to set the list_id on the item to create
-      // the relationship between the list and items
+        // If the item is not persisted yet we will
+        // want to save it. Additionally we will want
+        // to set the list_id on the item to create
+        // the relationship between the list and items
 
-      if (newItem.isNew()){
         newItem.set("list_id", items.list_id);
         newItem.save();
+
+        // Additionally we will need to update
+        // the item data (with the new item)
+
+        view.setProps({ itemData: items.toJSON() });
       }
 
     });
