@@ -3,109 +3,131 @@
   ns.App = function(opts) {
 
     var lists = new ns.data.TodoLists();
-
-    var selectedList;
-
-    var getState = function() {
-      if (!selectedList && lists.length) {
-        selectedList = lists.first();
-      }
-      var items = selectedList && selectedList.items;
-
-      return {
-        lists: lists.toJSON(),
-        items: items && items.toJSON(),
-        name: selectedList && selectedList.get("name")
-      }
-    };
+    var items = new ns.data.TodoItems();
 
     var Root = React.createClass({
       getInitialState: function() {
-        return getState();
-      },
-
-      redraw: function() {
-        this.setState( getState() );
+        return {
+          listsLoading: true,
+          itemsLoading: false,
+          selectedList: null
+        }
       },
 
       addList: function(obj) {
-        selectedList = lists.add(obj);
+        lists.add(obj);
       },
 
       delList: function(id) {
-        var wasSelected = false;
-        // Get the list to delete
-        var list = lists.findWhere({_id: id});
-        // Check if the list was selected
-        if (list.id === selectedList.id) {
-          wasSelected = true;
-        }
-        // delete the list
-        list.destroy();
-        // If the list was selected, reset selection.
-        if (wasSelected) {
-          selectedList = null;
-        }
-        // finally redraw
-        this.redraw();
+        lists.findWhere({_id: id}).destroy();
       },
 
       addItem: function(obj) {
-        // First set the list id
-        obj.list_id = selectedList.id;
-        selectedList.items.add(obj);
+        items.add(obj);
       },
 
       delItem: function(id) {
-        selectedList.items.findWhere({_id: id}).destroy();
-        this.redraw();
+        items.findWhere({_id: id}).destroy();
       },
 
       selectList: function(id) {
-        selectedList = lists.findWhere({_id: id});
-        this.redraw();
+        items.setListId(id);
+
+        this.setState({
+          selectedList: lists.findWhere({_id: id})
+        });
       },
 
       componentDidMount: function() {
         // When a _new_ model is added
         // to collection, save it.
-        lists.on("add items:add", function(model) {
+        lists.on("add", function(model) {
+          this.forceUpdate();
           if (model.isNew()){
             model.save();
           }
-          this.redraw();
         }, this);
 
-        // When our collection syncs with
-        // the server, update our state.
-        lists.on("sync items:sync", this.redraw, this);
-      },
+        items.on("add", function(model) {
+          this.forceUpdate();
+          if (model.isNew()){
+            model.set("list_id", items.list_id);
+            model.save();
+          }
+        }, this);
 
-      componentWillUnmount: function() {
-        lists.off();
+        lists.once("sync", function(){
+          this.setState({listsLoading: false});
+          lists.on("sync", function() {
+            this.forceUpdate();
+          }, this);
+          lists.on("destroy", function(list) {
+            if (list.id === this.state.selectedList.id) {
+              this.setState({selectedList: false});
+            } else {
+              this.forceUpdate();
+            }
+          }, this);
+        }, this);
+
+        items.on("request", function(requesting){
+          if (items === requesting) {
+            this.setState({itemsLoading: true});
+          }
+        }, this);
+
+        items.on("sync", function(synced){
+          if (items === synced) {
+            this.setState({itemsLoading: false});
+          } else {
+            this.forceUpdate();
+          }
+        }, this);
+
+        items.on("destroy", function() {
+          this.forceUpdate();
+        }, this);
+
       },
 
       render: function() {
-        return (
-          <div>
-            <ns.views.Header />
-            <div id="content">
+        var selList  = this.state.selectedList;
+        var listData = lists.toJSON();
+        var itemData = selList && items.toJSON();
+        var listName = selList && selList.get("name");
+        var content;
+
+        if (this.state.listsLoading) {
+          content = (
+            <ns.views.Spinner className="large-spinner" />
+          );
+        } else {
+          content = (
+            <div>
               <div className="lists">
                 <ns.views.TodoLists
-                  lists={this.state.lists}
+                  lists={listData}
                   addList={this.addList}
                   delList={this.delList}
-                  selectList={this.selectList} />
+                  selList={this.selectList} />
               </div>
 
               <div className="items">
                 <ns.views.TodoItems
-                  items={this.state.items}
+                  items={itemData}
+                  loading={this.state.itemsLoading}
                   addItem={this.addItem}
                   delItem={this.delItem}
-                  name={this.state.name} />
+                  name={listName} />
               </div>
             </div>
+          );
+        }
+
+        return (
+          <div>
+            <ns.views.Header />
+            <div id="content">{content}</div>
             <ns.views.Footer />
           </div>
         )

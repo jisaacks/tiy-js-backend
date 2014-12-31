@@ -17,23 +17,50 @@
 
   //--
 
+  ns.Spinner = React.createClass({
+    render: function() {
+      return <div className={this.props.className}><i className="fa fa-spin fa-spinner" /></div>
+    }
+  });
+
+  ns.DelBtn = React.createClass({
+    render: function() {
+      return (
+        <button className="del-btn" onClick={this.props.onClick}>
+          <i className="fa fa-remove" />
+        </button>
+      );
+    }
+  })
+
+  //--
+
   ns.TodoList = React.createClass({
     del: function() {
-      var confirmed = confirm("Delete " + this.props.list.name + "?");
-      if (confirmed) {
-        this.props.delList(this.props.list._id);
-      }
+      this.props.delList(this.props.list._id);
+    },
+
+    sel: function() {
+      this.props.selList(this.props.list._id);
     },
 
     render: function() {
+      var actionable;
+      if (this.props.list._id) {
+        // Model is persisted
+        actionable = <ns.DelBtn onClick={this.del} />
+      } else {
+        // If model does not have an _id yet
+        // then it is not persisted yet and
+        // cannot be deleted.
+        actionable = <ns.Spinner />
+      }
       return (
         <tr>
           <td>
-            <div onClick={this.props.onClick}>{this.props.list.name}</div>
+            <div onClick={this.sel}>{this.props.list.name}</div>
           </td>
-          <td>
-            <button className="del-btn" onClick={this.del}><li className="fa fa-remove" /></button>
-          </td>
+          <td>{actionable}</td>
         </tr>
       );
     }
@@ -61,21 +88,13 @@
     },
 
     buildList: function() {
-      var _this = this;
-      var selectList = this.props.selectList;
-      var select = function(id) {
-        return function() {
-          selectList(id);
-        }
-      };
-
-      return this.props.lists.map(function(list) {
+      return this.props.lists.map(function(list, i) {
         return <ns.TodoList
+          key={"list_"+i}
           list={list}
-          key={"list_"+list._id}
-          onClick={select(list._id)}
-          delList={_this.props.delList} />
-      });
+          selList={this.props.selList}
+          delList={this.props.delList} />
+      }.bind(this));
     },
 
     render: function() {
@@ -90,7 +109,11 @@
               onChange={this.newNameChange} />
             <input type="submit" value="Add" />
           </form>
-          <table><tbody>{this.buildList()}</tbody></table>
+          <table>
+            <tbody>
+                {this.buildList()}
+            </tbody>
+          </table>
         </div>
       );
     }
@@ -100,27 +123,33 @@
 
   ns.TodoItem = React.createClass({
     del: function() {
-      var confirmed = confirm("Delete " + this.props.item.name + "?");
-      if (confirmed) {
-        this.props.delItem(this.props.item._id);
-      }
+      this.props.delItem(this.props.item._id);
     },
 
     render: function() {
-      return (
-        <tr>
-          <td width="60%">{this.props.item.name}</td>
-          <td>
-            <label>
-              <input type="checkbox" />
-              Finished
-            </label>
-          </td>
-          <td>
-            <button className="del-btn" onClick={this.del}><li className="fa fa-remove" /></button>
-          </td>
-        </tr>
-      );
+      if (this.props.item._id) {
+        return (
+          <tr>
+            <td width="60%">{this.props.item.name}</td>
+            <td>
+              <label>
+                <input type="checkbox" />
+                Finished
+              </label>
+            </td>
+            <td><ns.DelBtn onClick={this.del} /></td>
+          </tr>
+        );
+      } else {
+        return (
+          <tr>
+            <td width="60%">{this.props.item.name}</td>
+            <td colSpan="2">
+              <ns.Spinner />
+            </td>
+          </tr>
+        );
+      }
     }
   });
 
@@ -145,19 +174,27 @@
       });
     },
 
-    buildList: function() {
-      var _this = this;
-      if (this.props.items.length) {
-        return this.props.items.map(function(item) {
-          return <ns.TodoItem
-            item={item}
-            key={"item_"+item._id}
-            delItem={_this.props.delItem} />
-        });
+    buildItems: function() {
+      return this.props.items.map(function(item, i) {
+        return <ns.TodoItem
+          key={"item_"+i}
+          item={item}
+          delItem={this.props.delItem} />
+      }.bind(this));
+    },
+
+    renderItems: function() {
+      if (this.props.loading) {
+        return <ns.Spinner />
+      } else if (this.props.items.length) {
+        return <table><tbody>{this.buildItems()}</tbody></table>
       } else {
-        return <tr><td colSpan="3">
-            <p className="empty"><i className="fa fa-arrow-up" /> Add something to do.</p>
-          </td></tr>
+        return (
+          <p className="empty">
+            <i className="fa fa-arrow-up" />
+            Add something to do.
+          </p>
+        )
       }
     },
 
@@ -174,13 +211,18 @@
                 onChange={this.newNameChange} />
               <input type="submit" value="Add" />
             </form>
-            <table>
-              <tbody>{this.buildList()}</tbody>
-            </table>
+            {this.renderItems()}
           </div>
         );
       } else {
-        return <div><p className="empty"><i className="fa fa-arrow-left" /> Create a list.</p></div>
+        return (
+          <div>
+            <p className="empty">
+              <i className="fa fa-arrow-left" />
+              Create a list.
+            </p>
+          </div>
+        );
       }
     }
   });

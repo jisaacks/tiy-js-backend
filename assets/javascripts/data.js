@@ -12,8 +12,17 @@
   ns.TodoItems = Backbone.Collection.extend({
     model:        ns.TodoItem,
 
-    initialize: function(data, opts) {
-      this.list_id = opts.list_id;
+    // Todo items should be scope to the selected
+    // todo list.
+    setListId: function(id) {
+      if (this.list_id !== id) {
+        this.list_id = id;
+        // When we change which todo list we
+        // are scoped to. We need to clear our
+        // items and resync with the server.
+        this.reset([]);
+        this.fetch();
+      }
     },
 
     url: function() {
@@ -25,25 +34,6 @@
   ns.TodoList = Backbone.Model.extend({
     idAttribute:  "_id",
     urlRoot:      "/todo_lists",
-
-    initialize: function() {
-      if (!this.isNew()) {
-        this.initItems();
-      } else {
-        this.once("change:_id", this.initItems, this);
-      }
-    },
-
-    initItems: function() {
-      this.items = new ns.TodoItems(null, {list_id: this.id});
-      this.listenTo(this.items, "add", function(model, collection, options) {
-        this.trigger("items:add", model, collection, options);
-      });
-      this.listenTo(this.items, "sync", function(synced, resp, options) {
-        this.trigger("items:sync", synced, resp, options);
-      });
-      this.items.fetch();
-    },
 
     complete: function() {
       return _.every(this.items.invoke("complete"));

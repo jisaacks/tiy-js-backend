@@ -64,47 +64,38 @@ table {
   border-left: 3px solid #f3f3f9;
 }
 
+.list-enter {
+  background: #FABE70;
+}
+.list-enter-active {
+  background: none;
+  transition: background 1.2s;
+}
+.list-leave {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.list-leave-active {
+  opacity: 0;
+}
+
 label{
   font-size: .8em;
 }
 
-// .util {
-//   float: right;
-//   margin-right: 10px;
-// }
+.large-spinner {
+  font-size: 42px;
+  text-align: center;
+  padding: 100px;
+}
 
-// button.delete {
-//   padding: 5px;
-//   font-size: .8em;
-// }
-// button.show-add {
-//   padding: 0px 6px 3px 6px;
-//   text-align: 3px;
-//   vertical-align: 4px;
-//   font-size: .7em;
-// }
 form.add {
-  // display: none;
   position: relative;
   padding: 20px;
   input[type=text] {
-    // box-sizing: border-box;
-    // display: block;
-    // width: calc(100% - 100px);
-    // padding: 4px;
-    // margin-right: 0;
-    // float: left;
-    // border-radius: 3px 0 0 3px;
-    // border: 1px solid #ccc;
     width: 200px;
   }
   input[type=submit] {
-    // outline: none;
-    // border-top-left-radius: 0;
-    // border-bottom-left-radius: 0;
-    // padding: 5px 10px;
-    // width: 60px;
-    // border: 1px solid #477dca;
-    // border-left: none;
+
   }
 }
