@@ -23,6 +23,8 @@
     }
   });
 
+  //--
+
   ns.DelBtn = React.createClass({
     render: function() {
       return (
@@ -31,7 +33,55 @@
         </button>
       );
     }
-  })
+  });
+
+  //--
+
+  ns.Root = React.createClass({
+    getDefaultProps: function() {
+      return {
+        listsLoading: true,
+        itemsLoading: false
+      }
+    },
+
+    render: function() {
+      if (this.props.listsLoading) {
+        content = (
+          <ns.Spinner className="large-spinner" />
+        );
+      } else {
+        content = (
+          <div>
+            <div className="lists">
+              <ns.TodoLists
+                lists={this.props.listData}
+                addList={this.props.addList}
+                delList={this.props.delList}
+                selList={this.props.selList} />
+            </div>
+
+            <div className="items">
+              <ns.TodoItems
+                items={this.props.itemData}
+                loading={this.props.itemsLoading}
+                addItem={this.props.addItem}
+                delItem={this.props.delItem}
+                name={this.props.selListName} />
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <div>
+          <ns.Header />
+          <div id="content">{content}</div>
+          <ns.Footer />
+        </div>
+      );
+    }
+  });
 
   //--
 
