@@ -21,6 +21,7 @@ var createApi = function(url, path) {
 env.appendPath("assets/javascripts");
 env.appendPath("assets/stylesheets");
 env.appendPath("assets/images");
+env.appendPath("assets/fonts");
 
 app.use("/assets", mincer.createServer(env));
 app.use(bodyParser.json());

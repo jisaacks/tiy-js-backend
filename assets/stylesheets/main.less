@@ -1,19 +1,60 @@
+@lightgrey: #f3f3f9;
+@lightred: #f79f9f;
+@blue: #6495ff;
+
+@font-face {
+  font-family: 'GoodDog';
+  src: url('GoodDog.otf');
+}
+
 body {
   margin: 0;
-  background: #f3f3f9;
+  background: @lightgrey;
   font-size: 1.2em;
-  font-family: sans-serif;
+  font-family: "GoodDog", sans-serif;
 }
 
 h1, h3 {
   line-height: 50px;
   margin: 0;
+  text-align: center;
 }
 
 #header {
-  background: #c3d6e9;
+  text-shadow: 1px 1px white;
+  color: darken(@lightgrey, 20%);
   padding: 20px;
   text-align: center;
+  h2 {
+    margin: 0;
+    font-size: 48px;
+  }
+}
+
+i {
+  color: darken(@lightgrey, 20%);
+}
+
+p.empty {
+  i {
+    margin: 38px 10px;
+  }
+}
+
+.del-btn {
+  background: white;
+  border: 1px solid #d3d3d9;
+  border-radius: 3px;
+  vertical-align: 4px;
+  cursor: pointer;
+  i {
+    color: @lightred;
+  }
+  &:hover {
+    i {
+      color: darken(@lightred, 20%);
+    }
+  }
 }
 
 #content {
@@ -22,7 +63,10 @@ h1, h3 {
 }
 
 #footer {
-  color: #999;
+  font-family: sans-serif;
+  color: darken(@lightgrey, 20%);
+  font-size: 13px;
+  text-shadow: 1px 1px white;
   margin: 20px;
   text-align: right;
   clear: both;
@@ -34,34 +78,58 @@ p.empty {
 }
 
 table {
-  p.empty {
-    line-height: 50px;
-    font-size: 18px;
-    text-indent: 50px;
+  width: 100%;
+  font-size: 1.3em;
+  border-spacing: 0;
+  margin-bottom: 20px;
+  tr {
+    &:nth-child(even) {
+      background: lighten(@lightgrey, 2%)
+    }
+  }
+  td {
+    border-bottom: solid 1px @lightgrey;
+    padding: 5px;
+    text-align: right;
+    &:first-child {
+      text-align: left;
+      padding-left: 10px;
+    }
   }
 }
 
+input[type=checkbox] {
+  vertical-align: 3px;
+}
+
+button {
+  font-family: "GoodDog", sans-serif;
+}
+
 .lists {
-  padding: 10px;
   float: left;
   width: 25%;
 
-  ul {
-    li {
-      padding: 5px;
-      cursor: pointer;
-      &:hover {
-        background: #d3e6f9;
-      }
+  .list {
+    cursor: pointer;
+    &:hover {
+      color: @blue;
     }
   }
 }
 
 .items {
-  padding: 10px;
-  float: right;
-  width: 70%;
-  border-left: 3px solid #f3f3f9;
+  float: left;
+  width: calc(75% - 1px);
+  border-left: 3px solid @lightgrey;
+}
+
+.columns {
+  overflow: hidden;
+  .column {
+    padding-bottom: 1000px;
+    margin-bottom: -1000px;
+  }
 }
 
 .list-enter {
@@ -93,9 +161,18 @@ form.add {
   position: relative;
   padding: 20px;
   input[type=text] {
-    width: 200px;
+    width: calc(100% - 20px);
+    font-size: 18px;
+    padding: 3px;
+    vertical-align: -1px;
+    border-radius: 4px 0 0 4px;
+    border: 1px solid #ccc;
   }
-  input[type=submit] {
-
+  button[type=submit] {
+    font-size: 20px;
+    background: #f3f3f9;
+    border: 1px solid #ccc;
+    border-left: none;
+    border-radius: 0 4px 4px 0;
   }
 }

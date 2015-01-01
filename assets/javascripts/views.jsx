@@ -2,7 +2,7 @@
 
   ns.Header = React.createClass({
     render: function() {
-      return <div id="header"><h2>Do All The Things</h2></div>
+      return <div id="header"><h2>Do All The Things!</h2></div>
     }
   });
 
@@ -52,8 +52,8 @@
         );
       } else {
         content = (
-          <div>
-            <div className="lists">
+          <div className="columns">
+            <div className="lists column">
               <ns.TodoLists
                 lists={this.props.listData}
                 addList={this.props.addList}
@@ -61,7 +61,7 @@
                 selList={this.props.selList} />
             </div>
 
-            <div className="items">
+            <div className="items column">
               <ns.TodoItems
                 items={this.props.itemData}
                 loading={this.props.itemsLoading}
@@ -108,8 +108,8 @@
       }
       return (
         <tr>
-          <td>
-            <div onClick={this.sel}>{this.props.list.name}</div>
+          <td width="90%">
+            <div className="list" onClick={this.sel}>{this.props.list.name}</div>
           </td>
           <td>{actionable}</td>
         </tr>
@@ -158,7 +158,7 @@
             <input type="text" name="name"
               value={this.state.newListName}
               onChange={this.newNameChange} />
-            <input type="submit" value="Add" />
+            <button type="submit">Add</button>
           </form>
           <table>
             <tbody>
@@ -183,11 +183,10 @@
     },
 
     render: function() {
-      console.log("item", this.props);
       if (this.props.item._id) {
         return (
           <tr>
-            <td width="60%">{this.props.item.name}</td>
+            <td width="80%">{this.props.item.name}</td>
             <td>
               <label>
                 <input
@@ -203,7 +202,7 @@
       } else {
         return (
           <tr>
-            <td width="60%">{this.props.item.name}</td>
+            <td width="80%">{this.props.item.name}</td>
             <td colSpan="2">
               <ns.Spinner />
             </td>
@@ -251,7 +250,7 @@
         return <table><tbody>{this.buildItems()}</tbody></table>
       } else {
         return (
-          <p className="empty">
+          <p className="empty" style={{textAlign:"center"}}>
             <i className="fa fa-arrow-up" />
             Add something to do.
           </p>
@@ -270,7 +269,7 @@
               <input type="text" name="name"
                 value={this.state.newItemName}
                 onChange={this.newNameChange} />
-              <input type="submit" value="Add" />
+              <button type="submit">Add</button>
             </form>
             {this.renderItems()}
           </div>
