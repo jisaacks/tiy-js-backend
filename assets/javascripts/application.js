@@ -2,7 +2,6 @@
 //= require ./vendor/underscore
 //= require ./vendor/backbone
 //= require_tree ./vendor
-//= require_tree ./templates
 //= require ./ns
 //= require ./data
 //= require ./views
