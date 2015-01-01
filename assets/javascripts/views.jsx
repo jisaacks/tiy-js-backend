@@ -133,9 +133,9 @@
     },
 
     newNameChange: function(e) {
-      this.setState({
-        newListName: e.target.value
-      });
+      var str = e.target.value;
+      var cap = str.charAt(0).toUpperCase() + str.slice(1);
+      this.setState({ newListName: cap });
     },
 
     buildList: function() {
@@ -155,7 +155,8 @@
             Things to Do
           </h3>
           <form className="add" onSubmit={this.add}>
-            <input type="text" name="name"
+            <input
+              type="text"
               value={this.state.newListName}
               onChange={this.newNameChange} />
             <button type="submit">Add</button>
@@ -228,9 +229,9 @@
     },
 
     newNameChange: function(e) {
-      this.setState({
-        newItemName: e.target.value
-      });
+      var str = e.target.value;
+      var cap = str.charAt(0).toUpperCase() + str.slice(1);
+      this.setState({ newItemName: cap });
     },
 
     buildItems: function() {
@@ -266,7 +267,8 @@
               {this.props.name}
             </h1>
             <form className="add" onSubmit={this.add}>
-              <input type="text" name="name"
+              <input
+                type="text"
                 value={this.state.newItemName}
                 onChange={this.newNameChange} />
               <button type="submit">Add</button>
