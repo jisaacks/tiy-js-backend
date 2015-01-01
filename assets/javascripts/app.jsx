@@ -260,6 +260,14 @@
     this.items.findWhere({_id: id}).destroy();
   };
 
+  // Mark an item as finished
+
+  finItem = function(id, isFinished) {
+    var item = this.items.findWhere({_id: id});
+    var value = isFinished ? new Date() : false;
+    item.save( "completed_at", value );
+  };
+
   // -- CONSTRUCTOR --//
 
   ns.App = function(opts) {
@@ -287,6 +295,7 @@
         delList={delList.bind(this)}
         selList={selList.bind(this)}
         addItem={addItem.bind(this)}
+        finItem={finItem.bind(this)}
         delItem={delItem.bind(this)} />
       , opts.el
     );

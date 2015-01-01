@@ -67,6 +67,7 @@
                 loading={this.props.itemsLoading}
                 addItem={this.props.addItem}
                 delItem={this.props.delItem}
+                finItem={this.props.finItem}
                 name={this.props.selListName} />
             </div>
           </div>
@@ -176,14 +177,23 @@
       this.props.delItem(this.props.item._id);
     },
 
+    fin: function(e) {
+      var id = this.props.item._id;
+      this.props.finItem(id, e.target.checked);
+    },
+
     render: function() {
+      console.log("item", this.props);
       if (this.props.item._id) {
         return (
           <tr>
             <td width="60%">{this.props.item.name}</td>
             <td>
               <label>
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  checked={!!this.props.item.completed_at}
+                  onChange={this.fin} />
                 Finished
               </label>
             </td>
@@ -229,6 +239,7 @@
         return <ns.TodoItem
           key={"item_"+i}
           item={item}
+          finItem={this.props.finItem}
           delItem={this.props.delItem} />
       }.bind(this));
     },
