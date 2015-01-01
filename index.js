@@ -10,6 +10,8 @@ require('mincer-jsx')(mincer);
 var app = express();
 var env = new mincer.Environment();
 
+mincer.logger.use(console);
+
 var createApi = function(url, path) {
   var db = new Datastore({
     filename: path,
