@@ -246,7 +246,11 @@
 
     renderItems: function() {
       if (this.props.loading) {
-        return <ns.Spinner />
+        return (
+          <div style={{textAlign:"center", fontSize: "42px"}}>
+            <ns.Spinner />
+          </div>
+        );
       } else if (this.props.items.length) {
         return <table><tbody>{this.buildItems()}</tbody></table>
       } else {
