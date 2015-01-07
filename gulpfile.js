@@ -1,5 +1,5 @@
-var gulp    = require('gulp');
-var Mincer  = require('mincer');
+var gulp    = require("gulp");
+var Mincer  = require("mincer");
 var mince   = require("gulp-mincer");
 var rename  = require("gulp-rename");
 var uglify  = require("gulp-uglify");
@@ -10,7 +10,7 @@ var nodir = function(path) {
   path.dirname = "";
 };
 
-gulp.task('default', function() {
+gulp.task("default", function() {
   gulp.src("assets/**/application.js")
     .pipe( mince(env) )
     .pipe( rename(nodir) )

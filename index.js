@@ -1,8 +1,8 @@
 var express     = require("express");
 var Mincer      = require("mincer");
-var Datastore   = require('nedb');
-var bodyParser  = require('body-parser');
-var json_api    = require('json_api');
+var Datastore   = require("nedb");
+var bodyParser  = require("body-parser");
+var json_api    = require("json_api");
 
 var env = require("./mincer-env");
 
@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 createApi("/todo_lists", "data/lists.nedb");
 createApi("/todo_items", "data/items.nedb");
 
-app.set('view engine', 'jade');
+app.set("view engine", "jade");
 
 app.get("/", function(req, res) {
   res.render("index");

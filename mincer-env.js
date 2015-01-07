@@ -1,7 +1,7 @@
 var Mincer = require("mincer");
 
 // Add JSX Engine to Mincer
-require('mincer-jsx')(Mincer);
+require("mincer-jsx")(Mincer);
 
 var env = new Mincer.Environment();
 
