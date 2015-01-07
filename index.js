@@ -18,6 +18,7 @@ var createApi = function(url, path) {
   app.use(url, json_api(db));
 }
 
+app.use(express.static(__dirname + "/public"));
 app.use("/assets", Mincer.createServer(env));
 app.use(bodyParser.json());
 
