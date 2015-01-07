@@ -9,7 +9,8 @@
     "email": "jd@jisaacks.com"
   },
   "scripts": {
-    "build": "gulp"
+    "start": "node index.js",
+    "postinstall": "gulp"
   },
   "main": "./index.js",
   "dependencies": {
