@@ -19,5 +19,9 @@
     "handlebars": "~2.0.0",
     "less": "~2.1.2",
     "mincer-jsx": "0.0.5"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.10",
+    "gulp-mincer": "0.0.1"
   }
 }
