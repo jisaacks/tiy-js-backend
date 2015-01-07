@@ -8,6 +8,9 @@
     "name": "JD Isaacks",
     "email": "jd@jisaacks.com"
   },
+  "scripts": {
+    "build": "gulp"
+  },
   "main": "./index.js",
   "dependencies": {
     "express": "~4.10.4",
@@ -18,9 +21,7 @@
     "json_api": "0.0.3",
     "handlebars": "~2.0.0",
     "less": "~2.1.2",
-    "mincer-jsx": "0.0.5"
-  },
-  "devDependencies": {
+    "mincer-jsx": "0.0.5",
     "gulp": "^3.8.10",
     "gulp-mincer": "0.0.1"
   }
